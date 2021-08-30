@@ -15,3 +15,11 @@ The provider used is 3.50.0. According to the [changelog](https://github.com/has
 there hasn't been work on `aws_glue_catalog_database`, `aws_glue_catalog_table` since 3.47.0. There also hasn't been
 any work on `aws_lakeformation_permissions` since 3.49.0. Therefore provider version 3.50.0 should behave the same as
 any other recent version.
+
+## Updates
+
+### 2021-08-30
+After contacting AWS support about the lakeformation_permissions_error, we found that permissioning
+simply works differently for resource-linked tables. A role needs SELECT access to the
+underlying resource (ie. library.books) and DESCRIBE access to the resource-link (ie. library_link.books_link).
+That will allow the role to run SELECT on the resource-linked table.

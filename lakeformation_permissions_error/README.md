@@ -1,6 +1,9 @@
 # Error with aws_lakeformation_permissions
 
 ## Summary
+
+**AS OF 2021-08-30, THIS ISSUE IS RESOLVED. PLEASE SEE THE UPDATES SECTION AT THE BOTTOM OF THIS FILE.**
+
 The `main.tf` file here is the same as `glue_catalog_table_error/main.tf`. We now add `lakeformation.tf` to bring in
 Lake Formation resources. 
 
@@ -81,3 +84,12 @@ Error: error creating Lake Formation Permissions (input: {
   42: resource "aws_lakeformation_permissions" "lf_permission3" {
 
 ```
+
+## Updates
+
+### 2021-08-30
+After contacting AWS support about the lakeformation_permissions_error, we found that permissioning
+simply works differently for resource-linked tables. A role needs SELECT access to the
+underlying resource (ie. library.books) and DESCRIBE access to the resource-link (ie. library_link.books_link).
+That will allow the role to run SELECT on the resource-linked table. Above issues are resolved
+by following this pattern.
