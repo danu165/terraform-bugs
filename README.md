@@ -1,25 +1,3 @@
-# Terraform errors with aws_glue_catalog_table and aws_lakeformation_permissions
+# Terraform errors with aws_lakeformation_permissions
 
-There seem to several bugs revolving around resource linking with `aws_glue_catalog_table`. The directory
-[glue_catalog_table_error](https://github.com/danu165/terraform-bugs/tree/master/glue_catalog_table_error)
-goes through the specific bug found with that resource.
-
-As described in [glue_catalog_table_error/README.md](https://github.com/danu165/terraform-bugs/blob/master/glue_catalog_table_error/README.md),
-`aws_glue_catalog_table` only works on the first run of a `terraform apply`.
-Therefore we went a step further with Lake Formation and noticed additional errors between the integration of
-resource-linked `aws_glue_catalog_table` and `aws_lakeformation_permission`. Please refer to
-[lakeformation_permissions_error/README.md](https://github.com/danu165/terraform-bugs/blob/master/lakeformation_permissions_error/README.md)
-for details.
-
-The provider used is 3.50.0. According to the [changelog](https://github.com/hashicorp/terraform-provider-aws/blob/main/CHANGELOG.md)
-there hasn't been work on `aws_glue_catalog_database`, `aws_glue_catalog_table` since 3.47.0. There also hasn't been
-any work on `aws_lakeformation_permissions` since 3.49.0. Therefore provider version 3.50.0 should behave the same as
-any other recent version.
-
-## Updates
-
-### 2021-08-30
-After contacting AWS support about the lakeformation_permissions_error, we found that permissioning
-simply works differently for resource-linked tables. A role needs SELECT access to the
-underlying resource (ie. library.books) and DESCRIBE access to the resource-link (ie. library_link.books_link).
-That will allow the role to run SELECT on the resource-linked table.
+Please refer to the README in `lakeformation_permissions_error`

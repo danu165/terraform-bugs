@@ -5,3 +5,4 @@ terraform.tfstate.backup
 *.iml
 apply.sh
 locals.tf.dist
+.venv

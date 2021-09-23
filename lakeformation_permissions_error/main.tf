@@ -11,6 +11,12 @@ data "aws_caller_identity" "current" {}
 
 locals {
   s3_key = "library/books/books.csv"
+
+  lakeformation_admins = [
+    "<ADD OWN ARN HERE>",
+    "<ADD OWN ARN HERE>",
+  ]
+  principal_to_grant = "<ADD OWN ARN HERE>"
 }
 
 ############################################################
@@ -34,11 +40,13 @@ resource "aws_s3_bucket_object" "upload" {
 }
 
 ############################################################
-# Original/Source Database and Table
+# Database and Table
 ############################################################
 resource "aws_glue_catalog_database" "database" {
   name = "library"
 }
+
+
 
 resource "aws_glue_catalog_table" "table" {
   name          = "books"
@@ -85,18 +93,13 @@ resource "aws_glue_catalog_table" "table" {
 }
 
 ############################################################
-# Linked Database and Table
+# Lake Formation admin and resources
 ############################################################
-resource "aws_glue_catalog_database" "database_link" {
-  name = "library_link"
+resource "aws_lakeformation_data_lake_settings" "admin" {
+  admins = local.lakeformation_admins
 }
 
-resource "aws_glue_catalog_table" "table_link" {
-  name          = "books_link"
-  database_name = aws_glue_catalog_database.database_link.name
-  target_table {
-    catalog_id    = data.aws_caller_identity.current.account_id
-    database_name = aws_glue_catalog_database.database.name
-    name          = aws_glue_catalog_table.table.name
-  }
+resource "aws_lakeformation_resource" "bucket" {
+  depends_on = [aws_lakeformation_data_lake_settings.admin]
+  arn        = aws_s3_bucket.data.arn
 }
